@@ -179,6 +179,24 @@ async def profile(ctx, user: discord.Member):
     embed.add_field(name="***__Money:__***", value=f"{coinss}", inline=True)
     embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Profile's!")
     await client.say(embed=embed)
+    
+@client.group()
+async def shop():
+    await client.say("Puchasing")
+
+@shop.command(name="testing", pass_context=True)
+async def _testing(ctx):
+    with open("coins.json", "r") as f:
+        coins = json.load(f)
+    if coins[ctx.message.server.id][ctx.message.author.id] <= 0:
+        await client.say("Sorry, you dont have enough money!")
+        return
+    coins[ctx.message.server.id][ctx.message.author.id] -= 50
+    await client.say("You have purchased the Testing role Thank you!")
+    with open("coins.json", "w") as f:
+        json.dump(coins, f, indent=4)
+    TestingRole = discord.utils.get(ctx.message.server.roles, name=="Tester")
+    await client.add_role(author, TestingRole)
 
         
 
