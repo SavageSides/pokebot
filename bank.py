@@ -166,6 +166,19 @@ async def _daily():
     embed.add_field(name="***__Daily Help__***", value="``p?daily``", inline=False)
     embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Type p?help <command>")
     await client.say(embed=embed)
+    
+@client.command(pass_context=True)
+async def profile(ctx, user: discord.Member):
+    with open("coins.json", "r") as f:
+        coins = json.load(f)
+    if not user.id in coins[ctx.message.server.id]:
+        coins[ctx.message.server.id][user.id] = 0
+    coinss = coins[ctx.message.server.id][user.id]
+    embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
+    embed.add_field(name="***__Name:__***", value=f"{user.name}", inline=False)
+    embed.add_field(name="***__Money:__***", value=f"{coinss}", inline=True)
+    embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Profile's!")
+    await client.say(embed=embed)
 
         
 
