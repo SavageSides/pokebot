@@ -188,6 +188,7 @@ async def shop():
 async def _testing(ctx):
     with open("coins.json", "r") as f:
         coins = json.load(f)
+    author = ctx.message.author
     if coins[ctx.message.server.id][ctx.message.author.id] <= 0:
         await client.say("Sorry, you dont have enough money!")
         return
