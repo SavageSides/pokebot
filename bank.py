@@ -4,7 +4,6 @@ import datetime
 import random
 from discord.ext import commands
 
-TOKEN = "NDkzNTU5NzY3NDkxNjc0MTEy.Dorp_A.oNWezjch8AR0lryHLQgwSdiUYLc"
 
 
 client = commands.Bot(command_prefix="p?")
