@@ -195,7 +195,7 @@ async def pay(ctx, member:discord.Member=None, *, amount: int):
         coins[ctx.message.server.id][member.id] += amount
         coins[ctx.message.server.id][ctx.message.author.id] -= amount
         embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
-        embed.add_field(name="Error:", value=f"Added **{amount}** to **{member.name}** ", inline=False)
+        embed.add_field(name="Added:", value=f"Added **{amount}** to **{member.name}** ", inline=False)
         embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Added!")
         await client.say(embed=embed)
     with open("coins.json", "w") as f:
