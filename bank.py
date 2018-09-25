@@ -4,7 +4,7 @@ import datetime
 import random
 from discord.ext import commands
 
-
+TOKEN = "NDkzNTU5NzY3NDkxNjc0MTEy.DosQqQ.46XwsvGSoQH5HGy6vfMJSycBgqY"
 
 client = commands.Bot(command_prefix="p?")
 client.remove_command('help')
