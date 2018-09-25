@@ -243,6 +243,7 @@ async def poll(ctx, channel_name, *, text):
         
 @client.command(pass_context=True)
 async def setup(ctx):
+    server = ctx.message.server
     if ctx.message.author.server_permissions.administrator:
        await client.create_role(server=server, name='Legendary')
        await client.say("I have finished the setup. Roles added: ``Legendary``")
