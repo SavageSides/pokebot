@@ -4,7 +4,7 @@ import datetime
 import random
 from discord.ext import commands
 
-TOKEN = "NDkzNTU5NzY3NDkxNjc0MTEy.DomvBg.eFhxtrOuGSzFN5HDzaTByVd5tF0"
+TOKEN = "NDkzNTU5NzY3NDkxNjc0MTEy.Dorp_A.oNWezjch8AR0lryHLQgwSdiUYLc"
 
 
 client = commands.Bot(command_prefix="p?")
@@ -13,14 +13,16 @@ client.remove_command('help')
 @client.event
 async def on_ready():
     print("Ready to make some money!")
-    await client.change_presence(game=discord.Game(name="Watching Pokémon!", type=3))
+    await client.change_presence(game=discord.Game(name="Pokémon!", type=3))
+
+
 
 @client.event
 async def on_command_error(error, ctx):
     channel = ctx.message.channel
     if isinstance(error, commands.CommandNotFound):
         embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
-        embed.add_field(name='Wrong Bank Command!', value='Please type ``p?help eco`` for Eco commands!', inline=True)
+        embed.add_field(name='Wrong Bank Command!', value='Please type ``p?help `` for Eco commands!', inline=True)
         await client.send_message(channel, embed=embed)
     if isinstance(error, commands.NoPrivateMessage):
         embed = discord.Embed(color=0xff00f0)
@@ -40,7 +42,7 @@ async def on_member_remove(member):
     await client.send_message(channel, f"Goodbye {member.mention} the **{server}** will miss you :(")
 
 @client.command(pass_context=True)
-@commands.cooldown(3, 60, commands.BucketType.user)
+@commands.cooldown(1, 864000, commands.BucketType.user)
 async def work(ctx):
     with open("coins.json", "r") as f:
        	coins = json.load(f)
@@ -60,7 +62,7 @@ async def work(ctx):
 @work.error
 async def cooldown_error(error, ctx):
     if isinstance(error, commands.CommandOnCooldown):
-        await client.say("**You can only use the command each 1 min**")
+        await client.say("**You can only use the command each day**")
 
 @client.command(pass_context=True)
 async def bal(ctx):
@@ -76,7 +78,7 @@ async def bal(ctx):
     await client.say(embed=embed)
 
 @client.command(pass_context=True)
-@commands.cooldown(5, 60, commands.BucketType.user)
+@commands.cooldown(5, 10, commands.BucketType.user)
 async def gamble(ctx, amount: int):
     with open("coins.json", "r") as f:
         coins = json.load(f)
@@ -113,7 +115,7 @@ async def gamble(ctx, amount: int):
 @gamble.error
 async def cooldown_error(error, ctx):
     if isinstance(error, commands.CommandOnCooldown):
-        await client.say("You can only use the command each 1 min")
+        await client.say("You can only use the command each 10 seconds")
 
 @client.command(pass_context=True)
 @commands.cooldown(1, 864000, commands.BucketType.user)
@@ -121,7 +123,7 @@ async def daily(ctx):
     with open("coins.json", "r") as f:
        	coins = json.load(f)
     author = ctx.message.author
-    coinsc = random.randint(1, 700)
+    coinsc = random.randint(100, 700)
     if not ctx.message.server.id in coins:
        	coins[ctx.message.server.id] = {}
     if not author.id in coins[ctx.message.server.id]:
@@ -138,35 +140,18 @@ async def cooldown_error(error, ctx):
     if isinstance(error, commands.CommandOnCooldown):
         await client.say("**Akward. Use this command in the next 24 hours!**")
 
-@client.group(pass_context=True)
-async def help(ctx):
-    await client.say("Hello!")
-    
 
-@help.command(name="eco", pass_context=True)
-async def _eco(ctx):
+@client.command( pass_context=True)
+async def help(ctx):
     author = ctx.message.author
     embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
     embed.add_field(name="***__Prefix:__***", value="``p?``", inline=True)
-    embed.add_field(name="***__Economy:__***", value="**p?work** This will give you some extra earnings \n **p?daily** Will give you your daily pay \n **p?gamble <amount>** This will either give you to time the number you said or take it away \n **p?bal** Will show you your balance", inline=True)
+    embed.add_field(name="***__Economy:__***", value="**p?work** This will give you some extra earnings \n **p?daily** Will give you your daily pay \n **p?gamble <amount>** This will either give you to time the number you said or take it away \n **p?bal** Will show you your balance \n **p?profile @user** Will show the users coins atm \n **p?pay @user <amount>** Will pay that user the coins if you can aford them \n **p?wallets** Will search for wallets to steal", inline=True)
+    embed.add_field(name="***__Utility:__***", value="**p?poll <channel_name> <message>** Will send the a poll to the channel with reactions", inline=True)
     embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Type p?help <command>")
     await client.send_message(author, embed=embed)
     await client.say(f"{author}, Please check your Private Messages. That Private Message contains the help message!")
 
-@help.command(name="gamble")
-async def _gamble():
-    embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
-    embed.add_field(name="***__Gamble Help__***", value="``p?gamble <amount>``", inline=False)
-    embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Type p?help <command>")
-    await client.say(embed=embed)
-    
-@help.command(name="daily")
-async def _daily():
-    embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
-    embed.add_field(name="***__Daily Help__***", value="``p?daily``", inline=False)
-    embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Type p?help <command>")
-    await client.say(embed=embed)
-    
 @client.command(pass_context=True)
 async def profile(ctx, user: discord.Member):
     with open("coins.json", "r") as f:
@@ -179,31 +164,85 @@ async def profile(ctx, user: discord.Member):
     embed.add_field(name="***__Money:__***", value=f"{coinss}", inline=True)
     embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Profile's!")
     await client.say(embed=embed)
-    
-@client.group()
-async def shop():
-    await client.say("Puchasing")
 
-@shop.command(name="testing", pass_context=True)
-async def _testing(ctx):
+
+@client.command(pass_context=True)
+async def pay(ctx, member:discord.Member=None, *, amount: int):
     with open("coins.json", "r") as f:
         coins = json.load(f)
-    author = ctx.message.author
-    if coins[ctx.message.server.id][ctx.message.author.id] <= 0:
-        await client.say("Sorry, you dont have enough money!")
+        author = ctx.message.author
+    if amount > coins[ctx.message.server.id][ctx.message.author.id]:
+        embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
+        embed.add_field(name="Error:", value="**You don't have enough coins!**", inline=False)
+        embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="No Coins Boi!")
+        await client.say(embed=embed)
         return
-    coins[ctx.message.server.id][ctx.message.author.id] -= 50
-    await client.say("You have purchased the Testing role Thank you!")
+    if author == member:
+        embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
+        embed.add_field(name="Error:", value="**You can't give money your self! Silly!**", inline=False)
+        embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Lol!")
+        await client.say(embed=embed)
+        return
+    if not ctx.message.server.id in coins:
+        coins[ctx.message.server.id] = {}
+    if not member.id in coins[ctx.message.server.id]:
+        coins[ctx.message.server.id][member.id] = 0
+        coins[ctx.message.server.id][member.id] += amount
+        embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
+        embed.add_field(name="Error:", value=f"Added **{amount} to **{member.name}** ", inline=False)
+        embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Added!")
+        await client.say(embed=embed)
+    else:
+        coins[ctx.message.server.id][member.id] += amount
+        coins[ctx.message.server.id][ctx.message.author.id] -= amount
+        embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
+        embed.add_field(name="Error:", value=f"Added **{amount}** to **{member.name}** ", inline=False)
+        embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Added!")
+        await client.say(embed=embed)
     with open("coins.json", "w") as f:
         json.dump(coins, f, indent=4)
-    TestingRole = discord.utils.get(ctx.message.server.roles, name=="Tester")
-    await client.add_role(author, TestingRole)
+
+@client.command(pass_context=True)
+async def wallets(ctx):
+    with open("coins.json", "r") as f:
+        coins = json.load(f)
+    choices = random.randint(0, 1)
+    coinss = random.randint(100, 700)
+    if choices == 0:
+        coins[ctx.message.server.id][ctx.message.author.id] += coinss
+        won = coinss
+        embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
+        embed.add_field(name="You won!", value=f"You stole {won} and went risk free!", inline=False)
+        await client.say(embed=embed)
+    else:
+        embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
+        embed.add_field(name="You lost", value=f"Theres no wallets found!", inline=False)
+        await client.say(embed=embed)
+    with open("coins.json", "w") as f:
+        json.dump(coins, f, indent=4)
+
+@client.command(pass_context=True)
+async def poll(ctx, channel_name, *, text):
+    if ctx.message.author.server_permissions.administrator:
+        channel = discord.utils.get(ctx.message.server.channels, name=channel_name)
+        author = ctx.message.author
+        embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
+        embed.set_author(name="Poll!")
+        embed.add_field(name="Created by: {0}".format(author.mention), value=f"{text}", inline=False)
+        embed.add_field(name="Reactions:", value="Click :white_check_mark: for yes \n Click :x: for no", inline=True)
+        embed.set_footer(icon_url="https://cdn.discordapp.com/attachments/493518731717115926/493559477468004383/image0.jpg", text="Poll!")
+        msg = await client.send_message(channel, embed=embed)
+        await client.add_reaction(msg, "\U00002705")
+        await client.add_reaction(msg, "\U0000274c")
+        await client.say(f"I have sent a poll to **{channel_name}**")
+    else:
+        embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
+        embed.add_field(name="***__Perms:__***", value="You are missing perms: ``Administrator``", inline=False)
+        await client.say(embed=embed)
 
         
-
-
-
-
     
+
+
 
 client.run(TOKEN)
