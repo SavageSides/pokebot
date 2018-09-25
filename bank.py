@@ -13,6 +13,8 @@ client.remove_command('help')
 async def on_ready():
     print("Ready to make some money!")
     await client.change_presence(game=discord.Game(name="Pokémon!", type=3))
+    
+
 
 
 
@@ -238,6 +240,12 @@ async def poll(ctx, channel_name, *, text):
         embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
         embed.add_field(name="***__Perms:__***", value="You are missing perms: ``Administrator``", inline=False)
         await client.say(embed=embed)
+        
+@client.command(pass_context=True)
+async def setup(ctx):
+    if ctx.message.author.server_permissions.administrator:
+       await client.create_role(server=server, name='Legendary')
+       await client.say("I have finished the setup. Roles added: ``Legendary``")
         
 @client.group(pass_context=True)
 async def buy(ctx):
