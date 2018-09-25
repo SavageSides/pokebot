@@ -251,7 +251,7 @@ async def _legendary(ctx):
     with open("coins.json", "r") as f:
         coins = json.load(f)
     author = ctx.message.author
-    if coins[ctx.message.server.id][ctx.message.author.id] <= 0:
+    if coins[ctx.message.server.id][ctx.message.author.id] <= 10000:
         await client.say("Sorry, you dont have enough money!")
         return
     coins[ctx.message.server.id][ctx.message.author.id] -= 10000
