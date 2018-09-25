@@ -238,6 +238,31 @@ async def poll(ctx, channel_name, *, text):
         embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
         embed.add_field(name="***__Perms:__***", value="You are missing perms: ``Administrator``", inline=False)
         await client.say(embed=embed)
+        
+@client.group(pass_context=True)
+async def buy(ctx):
+    with open("coins.json", "r") as f:
+        coins = json.load(f)
+    with open("coins.json", "w") as f:
+        json.dump(coins, f, indent=4)
+
+@buy.command(name="legendary", pass_context=True)
+async def _legendary(ctx):
+    with open("coins.json", "r") as f:
+        coins = json.load(f)
+    author = ctx.message.author
+    if coins[ctx.message.server.id][ctx.message.author.id] <= 0:
+        await client.say("Sorry, you dont have enough money!")
+        return
+    coins[ctx.message.server.id][ctx.message.author.id] -= 10000
+    LegendaryRole = discord.utils.get(ctx.message.server.roles, name="Legendary")
+    await client.add_roles(author, LegendaryRole)
+    embed = discord.Embed(color=0xfff700, timestamp=datetime.datetime.utcnow())
+    embed.add_field(name="Purchaced Item:", value="You have purchaced the legendary role.", inline=False)
+    embed.add_field(name="Information:", value="I have taken ``10000`` Dollars out of your balance.", inline=True)
+    await client.say(embed=embed)
+    with open("coins.json", "w") as f:
+        json.dump(coins, f, indent=4)
 
         
     
